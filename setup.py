@@ -7,7 +7,7 @@ with open("README.md", "r") as f_readme:
     long_description = f_readme.read()
 
 setuptools.setup(
-    name='osrs',
+    name='example-pkg-osrs',
     version="0.0.1a1",
     description="Simple Wrapper for osrs related api's",
     author="Extreme4al",
