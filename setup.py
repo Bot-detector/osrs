@@ -1,30 +1,27 @@
-import os
 import setuptools
 
-here = str(os.path.abspath(os.path.dirname(__file__)))
-
-with open("README.md", "r") as f_readme:
-    long_description = f_readme.read()
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
 
 setuptools.setup(
-    name='example-pkg-osrs',
-    version="0.0.1a1",
-    description="Simple Wrapper for osrs related api's",
-    author="Extreme4al",
+    name="osrs",
+    version="0.0.1",
+    author="extreme4all",
     author_email="",
+    description="Simple Wrapper for osrs related api's",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
-    license="MIT License",
-    packages=setuptools.find_packages(),
+    url="https://github.com/extreme4all/osrs",
+    project_urls={
+        "Bug Tracker": "https://github.com/extreme4all/osrs/issues",
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
-    setup_requires=['setuptools_scm'],
-    use_scm_version=True,
+    packages=setuptools.find_packages(),
+    python_requires=">=3.6",
     install_requires=[
         'certifi==2021.5.30',
         'charset-normalizer==2.0.4',
