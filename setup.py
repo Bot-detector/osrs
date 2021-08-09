@@ -10,10 +10,6 @@ about = {}
 with open(os.path.join(here, 'osrs', '__version__.py'), 'r') as f_version:
     exec(f_version.read(), about)
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
-
-
 setuptools.setup(
     name=about['__title__'],
     description=about['__description__'],
@@ -32,5 +28,11 @@ setuptools.setup(
     python_requires='>=3.6',
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
-    install_requires=required
+    install_requires=[
+        'certifi==2021.5.30',
+        'charset-normalizer==2.0.4',
+        'idna==3.2',
+        'requests==2.26.0',
+        'urllib3==1.26.6'
+    ]
 )
