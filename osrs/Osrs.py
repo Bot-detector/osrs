@@ -40,5 +40,5 @@ if __name__ == "__main__":
     header = {'user-agent':'extreme4all#6456'}
 
     api = osrsPrices(header=header)
-    d = api.items(first_letter="a")
+    d = api.timeseries(item_id=2)
     print(d)
