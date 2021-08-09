@@ -6,19 +6,16 @@ here = str(os.path.abspath(os.path.dirname(__file__)))
 with open("README.md", "r") as f_readme:
     long_description = f_readme.read()
 
-about = {}
-with open(os.path.join(here, 'osrs', '__version__.py'), 'r') as f_version:
-    exec(f_version.read(), about)
-
 setuptools.setup(
-    name=about['__title__'],
-    description=about['__description__'],
-    author=about['__author__'],
-    author_email=about['__author_email__'],
+    name='osrs',
+    version="0.0.1a1",
+    description="Simple Wrapper for osrs related api's",
+    author="Extreme4al",
+    author_email="",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url=about['__url__'],
-    license=about['__license__'],
+    url="",
+    license="MIT License",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
