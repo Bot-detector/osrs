@@ -1,5 +1,5 @@
 # osrs
-The goal is to make a wrapper around the 
+The goal is to make a wrapper around the varius runescape related api's
 
 # usage
 you must set a header, preferably with a discord tag or email
