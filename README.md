@@ -64,10 +64,9 @@ print(api.timeseries(item_id=4151))
 ## hiscores
 return the hiscore for a player
 ```
-from osrs import OSRS
+from osrs import osrs
 
-header = {'user-agent':'extreme4all#6456 - testing python package "osrs"'}
-api = OSRS.hiscores(header=header)
+api = osrs.Hiscores(identification='extreme4all#6456')
 modes = [
     'hiscore_oldschool', 'hiscore_oldschool_ironman', 'hiscore_oldschool_hardcore_ironman',
     'hiscore_oldschool_ultimate','hiscore_oldschool_deadman','hiscore_oldschool_seasonal',
