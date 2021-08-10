@@ -101,6 +101,7 @@ call pip freeze > requirements.txt
 powershell "(Get-Content requirements.txt) | ForEach-Object { $_ -replace '>=', '==' } | Set-Content requirements.txt"
 ```
 ## build & publish
+building package and deploying to pypi
 ```
 python -m build
 python -m twine upload osrs dist/*
