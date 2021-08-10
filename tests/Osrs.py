@@ -1,8 +1,8 @@
-from osrs import OSRS
+from osrs.OSRS import OsrsPrices
+from osrs import osrs
 
 header = {'user-agent':'extreme4all#6456 - testing python package "osrs"'}
-api = OSRS.osrsPrices(header=header)
-
+api = osrs.OsrsPrices(identification='extreme4all#6456')
 
 assert isinstance(api.items('a'), dict)
 assert isinstance(api.category(), dict)

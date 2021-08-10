@@ -1,8 +1,6 @@
-from osrs import Runelite
+from osrs import runelite
 
-# you must set a header, preferably with a discord tag or email
-header = {'user-agent':'extreme4all#6456 - testing python package "osrs"'}
-api = Runelite.runelitePrices(header=header)
+api = runelite.RunelitePrices(identification='extreme4all#6456')
 
 intervals = [
     '5m',

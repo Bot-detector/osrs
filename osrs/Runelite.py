@@ -1,19 +1,21 @@
 import requests
 
-class runelitePrices:
-    def __init__(self, header):
-        self.header = header
-        self.base_url = 'https://prices.runescape.wiki/api/v1/osrs/'
+
+class RunelitePrices:
+    base_url = 'https://prices.runescape.wiki/api/v1/osrs/'
+
+    def __init__(self, identification: str):
+        self.header = {'user-agent': identification}
         self.item_list = None
 
-    def items(self):
+    def items(self) -> list:
         # contains id => name
         if not self.item_list:
             url = f'{self.base_url}/mapping'
             self.item_list = requests.get(url, headers=self.header).json()
         return self.item_list
 
-    def prices(self, interval, timestamp=None):
+    def prices(self, interval: str, timestamp: int = None) -> dict:
         # timestamp must be unix timestamp
         url = f'{self.base_url}/{interval}'
 
@@ -22,8 +24,8 @@ class runelitePrices:
 
         data = requests.get(url, headers=self.header, params=param).json()
         return data
-    
-    def timeseries(self, interval, id=None, name=None):
+
+    def timeseries(self, interval: str, id: int = None, name: str = None) -> dict:
         # how can i make it so an item name can be provided => name to id is in the /mapping endpoint (see items)
         if name:
             if self.item_list is None:
@@ -41,8 +43,8 @@ class runelitePrices:
 
         data = requests.get(url, headers=self.header, params=param).json()
         return data
-    
-    def latest(self):
+
+    def latest(self) -> dict:
         url = f'{self.base_url}/latest'
         data = requests.get(url, headers=self.header).json()
         return data
