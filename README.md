@@ -104,5 +104,5 @@ powershell "(Get-Content requirements.txt) | ForEach-Object { $_ -replace '>=', 
 building package and deploying to pypi
 ```
 python -m build
-python -m twine upload osrs dist/*
+twine upload dist/*
 ```
