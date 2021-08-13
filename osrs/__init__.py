@@ -1,2 +1,2 @@
-from . import Runelite
-from . import OSRS
+from . import runelite
+from . import osrs
