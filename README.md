@@ -8,7 +8,7 @@ you must provide some identification to tell who you are, preferably with a disc
 ```
 from osrs import runelite
 
-api = runelite.RunelitePrices(identification='extreme4all#6456')
+api = runelite.RunelitePrices(identification='extreme4all#6455')
 ```
 to get a mapping of item names, id, low & high alch values etc
 ```
