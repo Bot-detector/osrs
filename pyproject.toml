@@ -1,4 +1,18 @@
-[tool.pytest.ini_options]
-pythonpath = [
-  ".", "osrs",
+[project]
+name = "osrs"
+version = "0.0.6"
+authors = [
+  { name="extreme4all"},
 ]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Bot-detector/osrs"
+"Bug Tracker" = "https://github.com/Bot-detector/osrs/issues"
