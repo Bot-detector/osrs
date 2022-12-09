@@ -23,7 +23,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
     install_requires=[
-        'certifi==2021.5.30',
+        'certifi==2022.12.7',
         'charset-normalizer==2.0.4',
         'idna==3.2',
         'requests==2.26.0',
