@@ -1,8 +1,12 @@
 import asyncio
+import logging
+import time
+from collections import deque
 from enum import Enum, auto
 
-import aiohttp
 from aiohttp import ClientSession, TCPConnector
+
+logger = logging.getLogger(__name__)
 
 
 class Mode(Enum):
@@ -19,6 +23,8 @@ class HiScore:
     def __init__(
         self,
         proxy: str = "",
+        max_calls_per_minute: int = 60,
+        session: ClientSession = None,
     ) -> None:
         """
         Initialize the HiScore class.
@@ -30,10 +36,34 @@ class HiScore:
         self.BASE_URL = "https://secure.runescape.com"
         self.proxy = proxy
         self.session = None
+        self.history = deque(maxlen=max_calls_per_minute)
 
-    async def init(self) -> ClientSession:
+    async def _init(self) -> ClientSession:
         connector = TCPConnector(limit=0)
         self.session = ClientSession(connector=connector)
+
+    async def _rate_limit(self):
+        """
+        Rate limits the scraper to 60 calls a minute.
+        """
+        self.history.append(int(time.time()))
+        maxlen = self.history.maxlen
+        MINUTE = 60
+
+        if not len(self.history) == maxlen:
+            return
+
+        head = self.history[0]
+        tail = self.history[-1]
+        span = tail - head
+
+        if span < MINUTE:
+            sleep = MINUTE - span
+            logger.warning(f"Rate limit reached, sleeping {sleep} seconds")
+            self.sleeping = True
+            await asyncio.sleep(sleep)
+            self.sleeping = False
+        return
 
     async def get_ranking(
         self,
@@ -62,7 +92,9 @@ class HiScore:
         params = {"table": table, "category": category, "size": size}
 
         if not self.session:
-            await self.init()
+            await self._init()
+
+        await self._rate_limit()
 
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
@@ -95,7 +127,9 @@ class HiScore:
         params = {"player": player}
 
         if not self.session:
-            await self.init()
+            await self._init()
+
+        await self._rate_limit()
 
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
@@ -107,6 +141,8 @@ class HiScore:
 
 
 async def main():
+    import aiohttp
+
     hiscore = HiScore()
     # existing player
     player_stats = await hiscore.get_hiscore(
