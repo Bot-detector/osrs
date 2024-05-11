@@ -144,6 +144,7 @@ async def main():
     import aiohttp
 
     hiscore = HiScore()
+
     # existing player
     player_stats = await hiscore.get_hiscore(
         mode=Mode.hiscore_oldschool, player="extreme4all"
