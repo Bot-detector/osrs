@@ -35,12 +35,14 @@ class HiScore:
         """
         self.BASE_URL = "https://secure.runescape.com"
         self.proxy = proxy
-        self.session = None
+        self.session = session
         self.history = deque(maxlen=max_calls_per_minute)
 
     async def _init(self) -> ClientSession:
-        connector = TCPConnector(limit=0)
-        self.session = ClientSession(connector=connector)
+        if self.session is None:
+            connector = TCPConnector(limit=0)
+            self.session = ClientSession(connector=connector)
+        assert isinstance(self.session, ClientSession)
 
     async def _rate_limit(self):
         """
@@ -91,8 +93,7 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/ranking.json"
         params = {"table": table, "category": category, "size": size}
 
-        if not self.session:
-            await self._init()
+        await self._init()
 
         await self._rate_limit()
 
