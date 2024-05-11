@@ -1,9 +1,12 @@
+import asyncio
 from enum import Enum, auto
 
+import aiohttp
 from aiohttp import ClientSession, TCPConnector
 
 
 class Mode(Enum):
+    hiscore_oldschool = auto()
     hiscore_oldschool_hardcore_ironman = auto()
     hiscore_oldschool_ultimate = auto()
     hiscore_oldschool_deadman = auto()
@@ -14,7 +17,8 @@ class Mode(Enum):
 
 class HiScore:
     def __init__(
-        self, proxy: str, session: ClientSession = ClientSession(TCPConnector(limit=0))
+        self,
+        proxy: str = "",
     ) -> None:
         """
         Initialize the HiScore class.
@@ -25,10 +29,18 @@ class HiScore:
         """
         self.BASE_URL = "https://secure.runescape.com"
         self.proxy = proxy
-        self.session = session
+        self.session = None
+
+    async def init(self) -> ClientSession:
+        connector = TCPConnector(limit=0)
+        self.session = ClientSession(connector=connector)
 
     async def get_ranking(
-        self, mode: Mode, table: int = 0, category: int = 0, size: int = 10
+        self,
+        mode: Mode,
+        table: int = 0,
+        category: int = 0,
+        size: int = 10,
     ) -> list[dict]:
         """
         Get the ranking for a specific game mode.
@@ -49,14 +61,20 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/ranking.json"
         params = {"table": table, "category": category, "size": size}
 
+        if not self.session:
+            await self.init()
+
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
             data = await response.json()
             return data
 
     async def get_hiscore(
-        self, mode: Mode, player: str, json: bool = True
-    ) -> list[dict]:
+        self,
+        mode: Mode,
+        player: str,
+        json: bool = True,
+    ) -> dict:
         """
         Get the hiscore data for a specific player and game mode.
 
@@ -66,7 +84,7 @@ class HiScore:
             json (bool): Whether to request the data in JSON format (default True).
 
         Returns:
-            list[dict] or str: The hiscore data in JSON format if json=True, otherwise as a string.
+            dict or str: The hiscore data in JSON format if json=True, otherwise as a string.
 
         Raises:
             aiohttp.ClientResponseError: If the HTTP request fails or returns a non-200 status code.
@@ -76,6 +94,9 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/{endpoint}"
         params = {"player": player}
 
+        if not self.session:
+            await self.init()
+
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
             if json:
@@ -83,3 +104,25 @@ class HiScore:
             else:
                 data = await response.text()
             return data
+
+
+async def main():
+    hiscore = HiScore()
+    # existing player
+    player_stats = await hiscore.get_hiscore(
+        mode=Mode.hiscore_oldschool, player="extreme4all"
+    )
+    assert isinstance(player_stats, dict)
+
+    # not existing player
+    try:
+        player_stats = await hiscore.get_hiscore(
+            mode=Mode.hiscore_oldschool, player="aaa-bbb-ccc-ddd-eee-fff"
+        )
+    except aiohttp.ClientResponseError as e:
+        assert e.status == 404
+        assert e.message == "Not found"
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
