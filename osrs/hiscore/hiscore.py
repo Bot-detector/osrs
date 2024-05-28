@@ -1,10 +1,10 @@
 import asyncio
 import logging
-import time
-from collections import deque
 from enum import Enum, auto
 
 from aiohttp import ClientSession, TCPConnector
+
+from osrs.ratelimiter import Ratelimiter
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +23,8 @@ class HiScore:
     def __init__(
         self,
         proxy: str = "",
-        max_calls_per_minute: int = 60,
         session: ClientSession = None,
+        ratelimiter: Ratelimiter = Ratelimiter(60),
     ) -> None:
         """
         Initialize the HiScore class.
@@ -36,7 +36,7 @@ class HiScore:
         self.BASE_URL = "https://secure.runescape.com"
         self.proxy = proxy
         self.session = session
-        self.history = deque(maxlen=max_calls_per_minute)
+        self.ratelimiter = ratelimiter
 
     async def _init(self) -> ClientSession:
         if self.session is None:
@@ -44,35 +44,12 @@ class HiScore:
             self.session = ClientSession(connector=connector)
         assert isinstance(self.session, ClientSession)
 
-    async def _rate_limit(self):
-        """
-        Rate limits the scraper to 60 calls a minute.
-        """
-        self.history.append(int(time.time()))
-        maxlen = self.history.maxlen
-        MINUTE = 60
-
-        if not len(self.history) == maxlen:
-            return
-
-        head = self.history[0]
-        tail = self.history[-1]
-        span = tail - head
-
-        if span < MINUTE:
-            sleep = MINUTE - span
-            logger.warning(f"Rate limit reached, sleeping {sleep} seconds")
-            self.sleeping = True
-            await asyncio.sleep(sleep)
-            self.sleeping = False
-        return
-
     async def get_ranking(
         self,
-        mode: Mode,
-        table: int = 0,
-        category: int = 0,
-        size: int = 10,
+        table: int,
+        category: int,
+        size: int,
+        mode: Mode = Mode.hiscore_oldschool,
     ) -> list[dict]:
         """
         Get the ranking for a specific game mode.
@@ -93,9 +70,10 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/ranking.json"
         params = {"table": table, "category": category, "size": size}
 
-        await self._init()
+        if not self.session:
+            await self._init()
 
-        await self._rate_limit()
+        await self.ratelimiter.call()
 
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
@@ -104,8 +82,8 @@ class HiScore:
 
     async def get_hiscore(
         self,
-        mode: Mode,
         player: str,
+        mode: Mode = Mode.hiscore_oldschool,
         json: bool = True,
     ) -> dict:
         """
@@ -130,7 +108,7 @@ class HiScore:
         if not self.session:
             await self._init()
 
-        await self._rate_limit()
+        await self.ratelimiter.call()
 
         async with self.session.get(url, params=params, proxy=self.proxy) as response:
             response.raise_for_status()
