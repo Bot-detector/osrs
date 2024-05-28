@@ -2,7 +2,6 @@ import time
 
 import pytest
 from aiohttp import ClientSession
-from aiohttp.client_exceptions import ClientResponseError
 
 from osrs.wiki import Endpoint, Interval, WikiPrices
 
