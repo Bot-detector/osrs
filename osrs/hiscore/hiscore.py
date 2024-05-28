@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from enum import Enum, auto
 
@@ -70,8 +69,7 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/ranking.json"
         params = {"table": table, "category": category, "size": size}
 
-        if not self.session:
-            await self._init()
+        await self._init()
 
         await self.ratelimiter.call()
 
@@ -105,8 +103,7 @@ class HiScore:
         url = f"{self.BASE_URL}/m={mode.name}/{endpoint}"
         params = {"player": player}
 
-        if not self.session:
-            await self._init()
+        await self._init()
 
         await self.ratelimiter.call()
 
@@ -117,28 +114,3 @@ class HiScore:
             else:
                 data = await response.text()
             return data
-
-
-async def main():
-    import aiohttp
-
-    hiscore = HiScore()
-
-    # existing player
-    player_stats = await hiscore.get_hiscore(
-        mode=Mode.hiscore_oldschool, player="extreme4all"
-    )
-    assert isinstance(player_stats, dict)
-
-    # not existing player
-    try:
-        player_stats = await hiscore.get_hiscore(
-            mode=Mode.hiscore_oldschool, player="aaa-bbb-ccc-ddd-eee-fff"
-        )
-    except aiohttp.ClientResponseError as e:
-        assert e.status == 404
-        assert e.message == "Not found"
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

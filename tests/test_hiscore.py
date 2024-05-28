@@ -2,7 +2,7 @@ import pytest
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientResponseError
 
-from osrs.hiscore import HiScore
+from osrs.hiscore.hiscore import HiScore
 
 
 @pytest.mark.asyncio

@@ -1,12 +1,12 @@
 [project]
 name = "osrs"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
   { name="extreme4all"},
 ]
-description = "A small example package"
+description = "a wrapper around osrs api's"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
