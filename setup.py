@@ -21,12 +21,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages(),
-    python_requires=">=3.6",
+    python_requires=">=3.10",
     install_requires=[
-        'certifi==2021.5.30',
-        'charset-normalizer==2.0.4',
-        'idna==3.2',
-        'requests==2.26.0',
-        'urllib3==1.26.6'
-    ]
+        "aiohttp==3.10.10",
+        "pydantic==2.9.2",
+    ],
 )

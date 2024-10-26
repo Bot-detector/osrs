@@ -1,10 +1,10 @@
 [project]
 name = "osrs"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
   { name="extreme4all"},
 ]
-description = "python wrapper around the osrs api endpoints"
+description = "a wrapper around osrs api's"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
