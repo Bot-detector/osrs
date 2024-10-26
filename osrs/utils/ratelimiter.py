@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class RateLimiter:
-    def __init__(self, calls_per: int = 60, inteval: int = 60) -> None:
-        self.history = deque(maxlen=calls_per)
-        self.interval = inteval
+    def __init__(self, calls_per_interval: int = 60, interval: int = 60) -> None:
+        self.history = deque(maxlen=calls_per_interval)
+        self.interval = interval
 
     async def check(self):
         """

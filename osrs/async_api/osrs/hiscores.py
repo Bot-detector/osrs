@@ -67,6 +67,8 @@ class Hiscore:
             ClientResponseError: For other HTTP errors.
             Undefined: For anything else that is not a 200
         """
+        await self.rate_limiter.check()
+
         logger.info(f"Performing hiscores lookup on {player}")
         url = f"{self.BASE_URL}/m={mode.value}/index_lite.json"
         params = {"player": player}
