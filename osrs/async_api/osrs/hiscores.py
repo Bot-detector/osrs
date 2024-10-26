@@ -4,8 +4,8 @@ from enum import Enum
 from aiohttp import ClientSession
 from pydantic import BaseModel
 
-from src.exceptions import PlayerDoesNotExist, Undefined, UnexpectedRedirection
-from src.utils import RateLimiter
+from osrs.exceptions import PlayerDoesNotExist, Undefined, UnexpectedRedirection
+from osrs.utils import RateLimiter
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class PlayerStats(BaseModel):
     activities: list[Activity]
 
 
-class hiscore:
+class Hiscore:
     BASE_URL = "https://secure.runescape.com"
 
     def __init__(

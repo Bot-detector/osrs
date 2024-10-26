@@ -1,8 +1,8 @@
 import pytest
 from aiohttp import ClientSession
 
-from src.async_api.osrs.hiscores import Mode, PlayerStats, hiscore
-from src.exceptions import PlayerDoesNotExist
+from osrs.async_api.osrs.hiscores import Mode, PlayerStats, hiscore
+from osrs.exceptions import PlayerDoesNotExist
 
 
 @pytest.mark.asyncio
