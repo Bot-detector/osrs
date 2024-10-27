@@ -1,7 +1,14 @@
 import pytest
 from aiohttp import ClientSession
 
-from osrs.async_api.osrs.itemdb import Catalogue, Detail, Items, Mode, TradeHistory
+from osrs.async_api.osrs.itemdb import (
+    Catalogue,
+    Detail,
+    Graph,
+    Items,
+    Mode,
+    TradeHistory,
+)
 
 
 @pytest.mark.asyncio
@@ -75,7 +82,7 @@ async def test_get_detail_invalid():
 @pytest.mark.asyncio
 async def test_get_graph_valid():
     """Test fetching trade history for a valid item ID"""
-    catalogue_instance = Catalogue()
+    catalogue_instance = Graph()
     async with ClientSession() as session:
         item_id = 4151  # Assume this is a valid item ID
         trade_history = await catalogue_instance.get_graph(
@@ -93,7 +100,7 @@ async def test_get_graph_valid():
 @pytest.mark.asyncio
 async def test_get_graph_invalid():
     """Test fetching trade history for an invalid item ID"""
-    catalogue_instance = Catalogue()
+    catalogue_instance = Graph()
     async with ClientSession() as session:
         invalid_item_id = 9999999  # Assume this item ID does not exist
         with pytest.raises(

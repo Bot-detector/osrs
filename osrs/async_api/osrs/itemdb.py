@@ -157,6 +157,23 @@ class Catalogue:
             data = await response.text()
             return Detail(**json.loads(data))
 
+
+class Graph:
+    BASE_URL = "https://secure.runescape.com"
+
+    def __init__(
+        self, proxy: str = "", rate_limiter: RateLimiter = RateLimiter()
+    ) -> None:
+        """Initialize the Catalogue with an optional proxy and rate limiter.
+
+        Args:
+            proxy (str): Proxy URL to use for API requests. Defaults to "".
+            rate_limiter (RateLimiter): Rate limiter to manage request throttling.
+                                        Defaults to a new RateLimiter instance.
+        """
+        self.proxy = proxy
+        self.rate_limiter = rate_limiter
+
     async def get_graph(
         self,
         session: ClientSession,
