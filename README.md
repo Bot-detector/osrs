@@ -1,7 +1,7 @@
 # The project
 The goal is to make a wrapper around the various oldschool runescape api's.
 
-# osrs hiscores
+## osrs hiscores
 ```py
 import asyncio
 
@@ -24,10 +24,11 @@ async def main():
         )
         print(player_stats)
 
-
-loop = asyncio.get_running_loop()
-await loop.create_task(main())
+# Run the asynchronous main function
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
+## osrs itemdb (Catalogue & Grand Exchange)
 ```py
 import asyncio
 from aiohttp import ClientSession
@@ -63,6 +64,7 @@ async def main():
         print("Item Detail:", item_detail)
 
         # Example 3: Fetching historical trade data (price graph) for a specific item
+        item_id = 4151  # Example item ID (Abyssal whip in OSRS)
         trade_history = await graph_instance.get_graph(
             session, 
             item_id=item_id, 
@@ -71,5 +73,36 @@ async def main():
         print("Trade History:", trade_history)
 
 # Run the asynchronous main function
-asyncio.run(main())
-``` 
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+```py
+import asyncio
+from aiohttp import ClientSession
+from osrs.async_api.wiki.prices import WikiPrices, AveragePrices, LatestPrices, TimeSeries, ItemMapping
+
+async def main():
+    wiki_prices_instance = WikiPrices(user_agent="Your User Agent")
+
+    async with ClientSession() as session:
+        # Fetch item mappings
+        mappings = await wiki_prices_instance.get_mapping(session=session)
+        print("Item Mappings:", mappings)
+
+        # Fetch latest prices
+        latest_prices = await wiki_prices_instance.get_latest_prices(session=session)
+        print("Latest Prices:", latest_prices)
+
+        # Fetch average prices
+        average_prices = await wiki_prices_instance.get_average_prices(session=session, interval=Interval.FIVE_MIN)
+        print("Average Prices:", average_prices)
+
+        # Fetch time series data
+        item_id = 4151  # Example item ID (Abyssal whip in OSRS)
+        time_series = await wiki_prices_instance.get_time_series(session=session, item_id=item_id, timestep=Interval.ONE_HOUR)
+        print("Time Series Data:", time_series)
+
+# Run the asynchronous main function
+if __name__ == "__main__":
+    asyncio.run(main())
+```

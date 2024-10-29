@@ -80,10 +80,8 @@ class Hiscore:
                 error_msg = (
                     f"Redirection occured: {response.url} - {response.history[0].url}"
                 )
-                logger.error(error_msg)
                 raise UnexpectedRedirection(error_msg)
             elif response.status == 404:
-                logger.error(f"player: {player} does not exist.")
                 raise PlayerDoesNotExist(f"player: {player} does not exist.")
             elif response.status != 200:
                 # raises ClientResponseError
