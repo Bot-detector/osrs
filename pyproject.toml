@@ -12,7 +12,20 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "aiohttp>=3.10.10",
+    "pydantic>=2.9.2",
+    "requests>=2.32.3",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/Bot-detector/osrs"
 "Bug Tracker" = "https://github.com/Bot-detector/osrs/issues"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.387",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.3",
+]

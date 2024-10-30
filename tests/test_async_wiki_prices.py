@@ -69,7 +69,7 @@ async def test_get_average_prices_invalid():
         with pytest.raises(Exception):
             await wiki_prices_instance.get_average_prices(
                 session=session,
-                interval="invalid_interval",
+                interval="invalid_interval",  # type: ignore
             )
 
 

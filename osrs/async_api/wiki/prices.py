@@ -68,7 +68,7 @@ class WikiPrices:
 
     def __init__(
         self,
-        user_agent: str = None,
+        user_agent: str = "",
         proxy: str = "",
         rate_limiter: RateLimiter = RateLimiter(),
     ) -> None:

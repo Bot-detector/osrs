@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class Mode(str, Enum):
-    OLDSCHOOL: str = "itemdb_oldschool"
-    RS3: str = "itemdb_rs"
+    OLDSCHOOL = "itemdb_oldschool"
+    RS3 = "itemdb_rs"
 
 
 class CurrentPrice(BaseModel):
@@ -122,7 +122,7 @@ class Catalogue:
         params = {"category": category, "alpha": alpha, "page": page}
         params = {k: v for k, v in params.items()}
 
-        logger.info(f"[GET]: {url=}, {params=}")
+        logger.debug(f"[GET]: {url=}, {params=}")
 
         async with session.get(url, proxy=self.proxy, params=params) as response:
             response.raise_for_status()
@@ -150,7 +150,7 @@ class Catalogue:
         url = f"{self.BASE_URL}/m={mode.value}/api/catalogue/detail.json"
         params = {"item": item_id}
 
-        logger.info(f"[GET]: {url=}, {params=}")
+        logger.debug(f"[GET]: {url=}, {params=}")
 
         async with session.get(url, proxy=self.proxy, params=params) as response:
             response.raise_for_status()
@@ -194,7 +194,7 @@ class Graph:
 
         url = f"{self.BASE_URL}/m={mode.value}/api/graph/{item_id}.json"
 
-        logger.info(f"[GET]: {url=}")
+        logger.debug(f"[GET]: {url=}")
 
         async with session.get(url, proxy=self.proxy) as response:
             response.raise_for_status()

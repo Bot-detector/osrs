@@ -76,6 +76,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+## wiki prices
+the wiki via runelite collects item price, which they expose via an api.
 ```py
 import asyncio
 from aiohttp import ClientSession

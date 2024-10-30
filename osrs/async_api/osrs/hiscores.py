@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class Mode(str, Enum):
-    OLDSCHOOL: str = "hiscore_oldschool"
-    IRONMAN: str = "hiscore_oldschool_ironman"
-    HARDCORE: str = "hiscore_oldschool_hardcore_ironman"
-    ULTIMATE: str = "hiscore_oldschool_ultimate"
-    DEADMAN: str = "hiscore_oldschool_deadman"
-    SEASONAL: str = "hiscore_oldschool_seasonal"
-    TOURNAMENT: str = "hiscore_oldschool_tournament"
+    OLDSCHOOL = "hiscore_oldschool"
+    IRONMAN = "hiscore_oldschool_ironman"
+    HARDCORE = "hiscore_oldschool_hardcore_ironman"
+    ULTIMATE = "hiscore_oldschool_ultimate"
+    DEADMAN = "hiscore_oldschool_deadman"
+    SEASONAL = "hiscore_oldschool_seasonal"
+    TOURNAMENT = "hiscore_oldschool_tournament"
 
 
 class Skill(BaseModel):
@@ -69,7 +69,7 @@ class Hiscore:
         """
         await self.rate_limiter.check()
 
-        logger.info(f"Performing hiscores lookup on {player}")
+        logger.debug(f"Performing hiscores lookup on {player}")
         url = f"{self.BASE_URL}/m={mode.value}/index_lite.json"
         params = {"player": player}
 
