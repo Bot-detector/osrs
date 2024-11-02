@@ -32,8 +32,10 @@ if __name__ == "__main__":
 ## osrs itemdb (Catalogue & Grand Exchange)
 ```py
 import asyncio
+
 from aiohttp import ClientSession
-from ors.asyncio import ItemDBMode, Catalogue, Graph
+
+from osrs.asyncio import ItemDBMode, Catalogue, Graph
 from osrs.utils import RateLimiter
 
 async def main():
@@ -82,11 +84,15 @@ if __name__ == "__main__":
 the wiki via runelite collects item price, which they expose via an api.
 ```py
 import asyncio
+
 from aiohttp import ClientSession
+
 from osrs.asyncio import WikiPrices, Interval
+from osrs.utils import RateLimiter
 
 async def main():
-    prices_instance = WikiPrices(user_agent="Your User Agent")
+    limiter = RateLimiter(calls_per_interval=100, interval=60)
+    prices_instance = WikiPrices(user_agent="Your User Agent", rate_limiter=limiter)
 
     async with ClientSession() as session:
         # Fetch item mappings
