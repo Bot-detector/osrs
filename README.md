@@ -7,7 +7,8 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from osrs.async_api.osrs.hiscores import Mode, PlayerStats, Hiscore, RateLimiter
+from osrs.asyncio import Hiscore, HSMode
+from osrs.utils import RateLimiter
 from osrs.exceptions import PlayerDoesNotExist
 
 
@@ -18,7 +19,7 @@ async def main():
     
     async with ClientSession() as session:
         player_stats = await hiscore_instance.get(
-            mode=Mode.OLDSCHOOL,
+            mode=HSMode.OLDSCHOOL,
             player="extreme4all",
             session=session,
         )
@@ -32,7 +33,8 @@ if __name__ == "__main__":
 ```py
 import asyncio
 from aiohttp import ClientSession
-from osrs.async_api.osrs.itemdb import Mode, Catalogue, Graph, RateLimiter
+from ors.asyncio import ItemDBMode, Catalogue, Graph
+from osrs.utils import RateLimiter
 
 async def main():
     # Initialize the Catalogue with optional proxy and rate limiter
@@ -49,7 +51,7 @@ async def main():
             session, 
             alpha=alpha, 
             page=page, 
-            mode=Mode.OLDSCHOOL, 
+            mode=ItemDBMode.OLDSCHOOL, 
             category=category
         )
         print("Fetched Items:", items)
@@ -59,7 +61,7 @@ async def main():
         item_detail = await catalogue_instance.get_detail(
             session, 
             item_id=item_id, 
-            mode=Mode.OLDSCHOOL
+            mode=ItemDBMode.OLDSCHOOL
         )
         print("Item Detail:", item_detail)
 
@@ -68,7 +70,7 @@ async def main():
         trade_history = await graph_instance.get_graph(
             session, 
             item_id=item_id, 
-            mode=Mode.OLDSCHOOL
+            mode=ItemDBMode.OLDSCHOOL
         )
         print("Trade History:", trade_history)
 
@@ -81,27 +83,39 @@ the wiki via runelite collects item price, which they expose via an api.
 ```py
 import asyncio
 from aiohttp import ClientSession
-from osrs.async_api.wiki.prices import WikiPrices, AveragePrices, LatestPrices, TimeSeries, ItemMapping
+from osrs.asyncio import WikiPrices, Interval
 
 async def main():
-    wiki_prices_instance = WikiPrices(user_agent="Your User Agent")
+    prices_instance = WikiPrices(user_agent="Your User Agent")
 
     async with ClientSession() as session:
         # Fetch item mappings
-        mappings = await wiki_prices_instance.get_mapping(session=session)
+        mappings = await prices_instance.get_mapping(
+            session=session
+        )
         print("Item Mappings:", mappings)
 
         # Fetch latest prices
-        latest_prices = await wiki_prices_instance.get_latest_prices(session=session)
+        latest_prices = await prices_instance.get_latest_prices(
+            session=session
+        )
         print("Latest Prices:", latest_prices)
 
         # Fetch average prices
-        average_prices = await wiki_prices_instance.get_average_prices(session=session, interval=Interval.FIVE_MIN)
+        average_prices = await prices_instance.get_average_prices(
+            session=session, 
+            interval=Interval.FIVE_MIN
+        )
+
         print("Average Prices:", average_prices)
 
         # Fetch time series data
         item_id = 4151  # Example item ID (Abyssal whip in OSRS)
-        time_series = await wiki_prices_instance.get_time_series(session=session, item_id=item_id, timestep=Interval.ONE_HOUR)
+        time_series = await prices_instance.get_time_series(
+            session=session, 
+            item_id=item_id, 
+            timestep=Interval.ONE_HOUR
+        )
         print("Time Series Data:", time_series)
 
 # Run the asynchronous main function

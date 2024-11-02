@@ -1,7 +1,8 @@
 import pytest
 from aiohttp import ClientSession
 
-from osrs.async_api.osrs.hiscores import Hiscore, Mode, PlayerStats
+from osrs.asyncio import Hiscore, HSMode
+from osrs.asyncio.osrs.hiscores import PlayerStats
 from osrs.exceptions import PlayerDoesNotExist
 
 
@@ -10,7 +11,7 @@ async def test_get_valid():
     hiscore_instance = Hiscore()
     async with ClientSession() as session:
         player_stats = await hiscore_instance.get(
-            mode=Mode.OLDSCHOOL,
+            mode=HSMode.OLDSCHOOL,
             player="extreme4all",
             session=session,
         )
@@ -29,7 +30,7 @@ async def test_get_invalid():
     async with ClientSession() as session:
         with pytest.raises(PlayerDoesNotExist):
             _ = await hiscore_instance.get(
-                mode=Mode.OLDSCHOOL,
+                mode=HSMode.OLDSCHOOL,
                 player="This_is_not_a_valid_name",
                 session=session,
             )

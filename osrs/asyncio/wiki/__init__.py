@@ -1,4 +1,4 @@
-from osrs.async_api.wiki.prices import (
+from osrs.asyncio.wiki.prices import (
     AveragePrices,
     ItemMapping,
     LatestPrices,
