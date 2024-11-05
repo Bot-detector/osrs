@@ -1,13 +1,12 @@
 import pytest
 from aiohttp import ClientSession
 
-from osrs.async_api.wiki.prices import (
+from osrs.asyncio import Interval, WikiPrices
+from osrs.asyncio.wiki.prices import (
     AveragePrices,
-    Interval,
     ItemMapping,
     LatestPrices,
     TimeSeries,
-    WikiPrices,
 )
 
 

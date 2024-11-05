@@ -1,12 +1,10 @@
 import pytest
 from aiohttp import ClientSession
 
-from osrs.async_api.osrs.itemdb import (
-    Catalogue,
+from osrs.asyncio import Catalogue, Graph, ItemDBMode
+from osrs.asyncio.osrs.itemdb import (
     Detail,
-    Graph,
     Items,
-    Mode,
     TradeHistory,
 )
 
@@ -20,7 +18,7 @@ async def test_get_items_valid():
             session=session,
             alpha="a",  # Assume items starting with "A" exist
             page=1,
-            mode=Mode.OLDSCHOOL,
+            mode=ItemDBMode.OLDSCHOOL,
             category=1,
         )
 
@@ -39,7 +37,7 @@ async def test_get_items_invalid_page():
             session=session,
             alpha="A",
             page=9999,  # Assume this page does not exist
-            mode=Mode.OLDSCHOOL,
+            mode=ItemDBMode.OLDSCHOOL,
             category=1,
         )
 
@@ -55,7 +53,7 @@ async def test_get_detail_valid():
     async with ClientSession() as session:
         item_id = 4151  # Assume this is a valid item ID
         item_detail = await catalogue_instance.get_detail(
-            session=session, item_id=item_id, mode=Mode.OLDSCHOOL
+            session=session, item_id=item_id, mode=ItemDBMode.OLDSCHOOL
         )
 
         # Assertions to confirm the response is correct
@@ -75,7 +73,7 @@ async def test_get_detail_invalid():
             Exception
         ):  # Replace Exception with a specific exception if defined
             await catalogue_instance.get_detail(
-                session=session, item_id=invalid_item_id, mode=Mode.OLDSCHOOL
+                session=session, item_id=invalid_item_id, mode=ItemDBMode.OLDSCHOOL
             )
 
 
@@ -86,7 +84,7 @@ async def test_get_graph_valid():
     async with ClientSession() as session:
         item_id = 4151  # Assume this is a valid item ID
         trade_history = await catalogue_instance.get_graph(
-            session=session, item_id=item_id, mode=Mode.OLDSCHOOL
+            session=session, item_id=item_id, mode=ItemDBMode.OLDSCHOOL
         )
 
         # Assertions to confirm the response is correct
@@ -95,6 +93,24 @@ async def test_get_graph_valid():
         ), "The returned object is not of type TradeHistory"
         assert trade_history.daily, "Daily trade history should not be empty"
         assert trade_history.average, "Average trade history should not be empty"
+
+
+@pytest.mark.asyncio
+async def test_get_graph_valid_no_session():
+    """Test fetching trade history for a valid item ID"""
+    catalogue_instance = Graph()
+
+    item_id = 4151  # Assume this is a valid item ID
+    trade_history = await catalogue_instance.get_graph(
+        item_id=item_id, mode=ItemDBMode.OLDSCHOOL
+    )
+
+    # Assertions to confirm the response is correct
+    assert isinstance(
+        trade_history, TradeHistory
+    ), "The returned object is not of type TradeHistory"
+    assert trade_history.daily, "Daily trade history should not be empty"
+    assert trade_history.average, "Average trade history should not be empty"
 
 
 @pytest.mark.asyncio
@@ -107,5 +123,5 @@ async def test_get_graph_invalid():
             Exception
         ):  # Replace Exception with a specific exception if defined
             await catalogue_instance.get_graph(
-                session=session, item_id=invalid_item_id, mode=Mode.OLDSCHOOL
+                session=session, item_id=invalid_item_id, mode=ItemDBMode.OLDSCHOOL
             )

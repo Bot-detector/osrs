@@ -98,10 +98,10 @@ class Catalogue:
 
     async def get_items(
         self,
-        session: ClientSession,
         alpha: str,
         page: int | None = 1,
         mode: Mode = Mode.OLDSCHOOL,
+        session: ClientSession | None = None,
         category: int = 1,
     ) -> Items:
         """Fetch items from the RuneScape item catalog based on alphabetical filter.
@@ -124,16 +124,22 @@ class Catalogue:
 
         logger.debug(f"[GET]: {url=}, {params=}")
 
-        async with session.get(url, proxy=self.proxy, params=params) as response:
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy, params=params) as response:
             response.raise_for_status()
             data = await response.text()
-            return Items(**json.loads(data))
+
+        if session is None:
+            await _session.close()
+
+        return Items(**json.loads(data))
 
     async def get_detail(
         self,
-        session: ClientSession,
         item_id: int,
         mode: Mode = Mode.OLDSCHOOL,
+        session: ClientSession | None = None,
     ) -> Detail:
         """Fetch detailed information about a specific item.
 
@@ -152,17 +158,24 @@ class Catalogue:
 
         logger.debug(f"[GET]: {url=}, {params=}")
 
-        async with session.get(url, proxy=self.proxy, params=params) as response:
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy, params=params) as response:
             response.raise_for_status()
             data = await response.text()
-            return Detail(**json.loads(data))
+
+        if session is None:
+            await _session.close()
+        return Detail(**json.loads(data))
 
 
 class Graph:
     BASE_URL = "https://secure.runescape.com"
 
     def __init__(
-        self, proxy: str = "", rate_limiter: RateLimiter = RateLimiter()
+        self,
+        proxy: str = "",
+        rate_limiter: RateLimiter = RateLimiter(),
     ) -> None:
         """Initialize the Catalogue with an optional proxy and rate limiter.
 
@@ -176,9 +189,9 @@ class Graph:
 
     async def get_graph(
         self,
-        session: ClientSession,
         item_id: int,
         mode: Mode = Mode.OLDSCHOOL,
+        session: ClientSession | None = None,
     ) -> TradeHistory:
         """Fetch trade history graph data for a specific item.
 
@@ -196,7 +209,13 @@ class Graph:
 
         logger.debug(f"[GET]: {url=}")
 
-        async with session.get(url, proxy=self.proxy) as response:
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy) as response:
             response.raise_for_status()
             data = await response.text()
-            return TradeHistory(**json.loads(data))
+
+        if session is None:
+            await _session.close()
+
+        return TradeHistory(**json.loads(data))
