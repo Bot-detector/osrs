@@ -25,6 +25,13 @@ async def main():
         )
         print(player_stats)
 
+    # if you do not provide a session we'll make one for you, this session will not be reused
+    # for multiple requests we advice doing that within one session like the example above
+    player_stats = await hiscore_instance.get(
+        mode=HSMode.OLDSCHOOL,
+        player="extreme4all",
+    )
+    print(player_stats)
 # Run the asynchronous main function
 if __name__ == "__main__":
     asyncio.run(main())
