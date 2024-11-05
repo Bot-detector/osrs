@@ -34,3 +34,15 @@ async def test_get_invalid():
                 player="This_is_not_a_valid_name",
                 session=session,
             )
+
+
+@pytest.mark.asyncio
+async def test_get_default_no_session():
+    hiscore_instance = Hiscore()
+    player_stats = await hiscore_instance.get(player="extreme4all")
+    # Assertions to confirm the response is correct
+    assert isinstance(
+        player_stats, PlayerStats
+    ), "The returned object is not of type PlayerStats"
+    assert player_stats.skills, "Skills data should not be empty"
+    assert player_stats.activities, "Activities data should not be empty"

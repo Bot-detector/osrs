@@ -94,7 +94,12 @@ class WikiPrices:
                 raise Exception("invalid input")
             self.user_agent = inp
 
-    async def fetch_data(self, session: ClientSession, url: str, params: dict = {}):
+    async def fetch_data(
+        self,
+        url: str,
+        session: ClientSession | None = None,
+        params: dict = {},
+    ):
         """
         Utility method to fetch data from a specific endpoint, with ratelimiter,
         and basic error handling
@@ -109,16 +114,23 @@ class WikiPrices:
         """
         await self.rate_limiter.check()
 
-        async with session.get(url, proxy=self.proxy, params=params) as response:
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy, params=params) as response:
             if response.status == 400:
                 error = await response.json()
                 raise Exception(error)
             elif response.status != 200:
                 response.raise_for_status()
                 raise Undefined("Unexpected error.")
-            return await response.json()
+            data = await response.json()
 
-    async def get_mapping(self, session: ClientSession):
+        if session is None:
+            await _session.close()
+
+        return data
+
+    async def get_mapping(self, session: ClientSession | None = None):
         """
         Fetches item mappings containing metadata.
 
@@ -138,7 +150,9 @@ class WikiPrices:
         data = await self.fetch_data(session=session, url=url)
         return [ItemMapping(**item) for item in data]
 
-    async def get_latest_prices(self, session: ClientSession) -> LatestPrices:
+    async def get_latest_prices(
+        self, session: ClientSession | None = None
+    ) -> LatestPrices:
         """
         Fetches the latest prices for all items.
 
@@ -160,8 +174,8 @@ class WikiPrices:
 
     async def get_average_prices(
         self,
-        session: ClientSession,
         interval: Interval,
+        session: ClientSession | None = None,
         timestamp: int | None = None,
     ) -> AveragePrices:
         """
@@ -187,7 +201,7 @@ class WikiPrices:
         return AveragePrices(**data)
 
     async def get_time_series(
-        self, session: ClientSession, item_id: int, timestep: Interval
+        self, item_id: int, timestep: Interval, session: ClientSession | None = None
     ) -> TimeSeries:
         """
         Fetches time-series data for a specific item and timestep.

@@ -96,6 +96,24 @@ async def test_get_graph_valid():
 
 
 @pytest.mark.asyncio
+async def test_get_graph_valid_no_session():
+    """Test fetching trade history for a valid item ID"""
+    catalogue_instance = Graph()
+
+    item_id = 4151  # Assume this is a valid item ID
+    trade_history = await catalogue_instance.get_graph(
+        item_id=item_id, mode=ItemDBMode.OLDSCHOOL
+    )
+
+    # Assertions to confirm the response is correct
+    assert isinstance(
+        trade_history, TradeHistory
+    ), "The returned object is not of type TradeHistory"
+    assert trade_history.daily, "Daily trade history should not be empty"
+    assert trade_history.average, "Average trade history should not be empty"
+
+
+@pytest.mark.asyncio
 async def test_get_graph_invalid():
     """Test fetching trade history for an invalid item ID"""
     catalogue_instance = Graph()

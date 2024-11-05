@@ -49,7 +49,12 @@ class Hiscore:
         self.proxy = proxy
         self.rate_limiter = rate_limiter
 
-    async def get(self, mode: Mode, player: str, session: ClientSession) -> PlayerStats:
+    async def get(
+        self,
+        player: str,
+        mode: Mode = Mode.OLDSCHOOL,
+        session: ClientSession | None = None,
+    ) -> PlayerStats:
         """
         Fetches player stats from the OSRS hiscores API.
 
@@ -73,7 +78,9 @@ class Hiscore:
         url = f"{self.BASE_URL}/m={mode.value}/index_lite.json"
         params = {"player": player}
 
-        async with session.get(url, proxy=self.proxy, params=params) as response:
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy, params=params) as response:
             # when the HS are down it will redirect to the main page.
             # after redirction it will return a 200, so we must check for redirection first
             if response.history and any(r.status == 302 for r in response.history):
@@ -88,4 +95,8 @@ class Hiscore:
                 response.raise_for_status()
                 raise Undefined()
             data = await response.json()
-            return PlayerStats(**data)
+
+        if session is None:
+            await _session.close()
+
+        return PlayerStats(**data)
