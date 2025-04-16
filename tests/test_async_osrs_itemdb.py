@@ -57,9 +57,9 @@ async def test_get_detail_valid():
         )
 
         # Assertions to confirm the response is correct
-        assert isinstance(
-            item_detail, Detail
-        ), "The returned object is not of type Detail"
+        assert isinstance(item_detail, Detail), (
+            "The returned object is not of type Detail"
+        )
         assert item_detail.item.name == "Abyssal whip", "Unexpected item name returned"
 
 
@@ -88,9 +88,9 @@ async def test_get_graph_valid():
         )
 
         # Assertions to confirm the response is correct
-        assert isinstance(
-            trade_history, TradeHistory
-        ), "The returned object is not of type TradeHistory"
+        assert isinstance(trade_history, TradeHistory), (
+            "The returned object is not of type TradeHistory"
+        )
         assert trade_history.daily, "Daily trade history should not be empty"
         assert trade_history.average, "Average trade history should not be empty"
 
@@ -106,9 +106,9 @@ async def test_get_graph_valid_no_session():
     )
 
     # Assertions to confirm the response is correct
-    assert isinstance(
-        trade_history, TradeHistory
-    ), "The returned object is not of type TradeHistory"
+    assert isinstance(trade_history, TradeHistory), (
+        "The returned object is not of type TradeHistory"
+    )
     assert trade_history.daily, "Daily trade history should not be empty"
     assert trade_history.average, "Average trade history should not be empty"
 

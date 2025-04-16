@@ -21,9 +21,9 @@ async def test_get_mapping_valid():
 
         assert isinstance(mappings, list), "Mappings should be a list"
         assert len(mappings) > 0, "Mappings list should not be empty"
-        assert isinstance(
-            mappings[0], ItemMapping
-        ), "First mapping should be of type ItemMapping"
+        assert isinstance(mappings[0], ItemMapping), (
+            "First mapping should be of type ItemMapping"
+        )
 
 
 @pytest.mark.asyncio
@@ -35,9 +35,9 @@ async def test_get_latest_prices_valid():
     async with ClientSession() as session:
         latest_prices = await wiki_prices_instance.get_latest_prices(session=session)
 
-        assert isinstance(
-            latest_prices, LatestPrices
-        ), "The returned object is not of type LatestPrices"
+        assert isinstance(latest_prices, LatestPrices), (
+            "The returned object is not of type LatestPrices"
+        )
         assert latest_prices.data, "Latest prices data should not be empty"
 
 
@@ -52,9 +52,9 @@ async def test_get_average_prices_valid():
             session=session, interval=Interval.FIVE_MIN
         )
 
-        assert isinstance(
-            average_prices, AveragePrices
-        ), "The returned object is not of type AveragePrices"
+        assert isinstance(average_prices, AveragePrices), (
+            "The returned object is not of type AveragePrices"
+        )
         assert average_prices.data, "Average prices data should not be empty"
 
 
@@ -84,9 +84,9 @@ async def test_get_time_series_valid():
             session=session, item_id=item_id, timestep=Interval.ONE_HOUR
         )
 
-        assert isinstance(
-            time_series, TimeSeries
-        ), "The returned object is not of type TimeSeries"
+        assert isinstance(time_series, TimeSeries), (
+            "The returned object is not of type TimeSeries"
+        )
         assert len(time_series.data) > 0, "Time series data should not be empty"
 
 
@@ -102,7 +102,7 @@ async def test_get_time_series_invalid():
         time_series = await wiki_prices_instance.get_time_series(
             session=session, item_id=invalid_item_id, timestep=Interval.ONE_HOUR
         )
-        assert isinstance(
-            time_series, TimeSeries
-        ), "The returned object is not of type TimeSeries"
+        assert isinstance(time_series, TimeSeries), (
+            "The returned object is not of type TimeSeries"
+        )
         assert len(time_series.data) == 0, "Time series data should be empty"

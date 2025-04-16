@@ -17,9 +17,9 @@ async def test_get_valid():
         )
 
         # Assertions to confirm the response is correct
-        assert isinstance(
-            player_stats, PlayerStats
-        ), "The returned object is not of type PlayerStats"
+        assert isinstance(player_stats, PlayerStats), (
+            "The returned object is not of type PlayerStats"
+        )
         assert player_stats.skills, "Skills data should not be empty"
         assert player_stats.activities, "Activities data should not be empty"
 
@@ -41,8 +41,8 @@ async def test_get_default_no_session():
     hiscore_instance = Hiscore()
     player_stats = await hiscore_instance.get(player="extreme4all")
     # Assertions to confirm the response is correct
-    assert isinstance(
-        player_stats, PlayerStats
-    ), "The returned object is not of type PlayerStats"
+    assert isinstance(player_stats, PlayerStats), (
+        "The returned object is not of type PlayerStats"
+    )
     assert player_stats.skills, "Skills data should not be empty"
     assert player_stats.activities, "Activities data should not be empty"
