@@ -26,5 +26,5 @@ class RateLimiter:
             # If time_span is less than interval seconds, sleep for the remaining time
             if time_span < self.interval:
                 sleep_time = self.interval - time_span
-                logger.debug(f"Rate limit reached. Sleeping for {sleep_time} seconds.")
+                logger.info(f"Rate limit reached. Sleeping for {sleep_time} seconds.")
                 await asyncio.sleep(sleep_time)

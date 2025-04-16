@@ -1,4 +1,5 @@
 import logging
+import time
 from enum import Enum
 
 from aiohttp import ClientSession
@@ -54,7 +55,8 @@ class Hiscore:
         player: str,
         mode: Mode = Mode.OLDSCHOOL,
         session: ClientSession | None = None,
-    ) -> PlayerStats:
+        return_latency: bool = False,
+    ) -> PlayerStats | tuple[PlayerStats, float]:
         """
         Fetches player stats from the OSRS hiscores API.
 
@@ -73,6 +75,8 @@ class Hiscore:
             Undefined: For anything else that is not a 200
         """
         await self.rate_limiter.check()
+
+        start_time = time.perf_counter()
 
         logger.debug(f"Performing hiscores lookup on {player}")
         url = f"{self.BASE_URL}/m={mode.value}/index_lite.json"
@@ -98,5 +102,9 @@ class Hiscore:
 
         if session is None:
             await _session.close()
+
+        if return_latency:
+            total_time = time.perf_counter() - start_time
+            return PlayerStats(**data), total_time
 
         return PlayerStats(**data)
