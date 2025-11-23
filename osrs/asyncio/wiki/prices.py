@@ -1,5 +1,6 @@
 import logging
 from enum import Enum
+from typing import Optional
 
 from aiohttp import ClientSession
 from pydantic import BaseModel
@@ -18,22 +19,22 @@ class Interval(str, Enum):
 
 
 class ItemMapping(BaseModel):
+    name: str
     examine: str
     id: int
     members: bool
-    lowalch: int | None = None
-    limit: int | None = None
-    value: int
-    highalch: int | None = None
     icon: str
-    name: str
+    limit: Optional[int] = None
+    lowalch: Optional[int] = None
+    value: Optional[int] = None
+    highalch: Optional[int] = None
 
 
 class PriceData(BaseModel):
-    high: int | None
-    highTime: int | None
-    low: int | None
-    lowTime: int | None
+    high: Optional[int] = None
+    highTime: Optional[int] = None
+    low: Optional[int] = None
+    lowTime: Optional[int] = None
 
 
 class LatestPrices(BaseModel):
