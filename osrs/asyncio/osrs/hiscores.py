@@ -41,6 +41,12 @@ class PlayerStats(BaseModel):
     activities: list[Activity]
 
 
+class HighscoreRank(BaseModel):
+    name: str
+    score: int
+    rank: int
+
+
 class Hiscore:
     BASE_URL = "https://secure.runescape.com"
 
@@ -108,3 +114,44 @@ class Hiscore:
             return PlayerStats(**data), total_time
 
         return PlayerStats(**data)
+
+    async def get_rank(
+        self,
+        mode: Mode,
+        table: int,
+        category: int,
+        top_rank: int,
+        size: int,
+        session: ClientSession | None = None,
+    ) -> list[HighscoreRank]:
+        logger.debug("Performing hiscores lookup on ")
+        url = f"{self.BASE_URL}/m={mode.value}/ranking.json"
+        params = {
+            "table": table,
+            "category": category,
+            "toprank": top_rank,
+            "size": size,
+        }
+
+        _session = ClientSession() if session is None else session
+
+        async with _session.get(url, proxy=self.proxy, params=params) as response:
+            if response.history and any(r.status == 302 for r in response.history):
+                error_msg = (
+                    f"Redirection occured: {response.url} - {response.history[0].url}"
+                )
+                raise UnexpectedRedirection(error_msg)
+            elif response.status != 200:
+                response.raise_for_status()
+                raise Undefined()
+            data = await response.json()
+        if session is None:
+            await _session.close()
+        return [
+            HighscoreRank(
+                name=d["name"],
+                score=int(d["score"].replace(",", "")),
+                rank=int(d["rank"].replace(",", "")),
+            )
+            for d in data
+        ]

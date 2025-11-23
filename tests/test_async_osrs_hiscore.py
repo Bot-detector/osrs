@@ -46,3 +46,20 @@ async def test_get_default_no_session():
     )
     assert player_stats.skills, "Skills data should not be empty"
     assert player_stats.activities, "Activities data should not be empty"
+
+
+@pytest.mark.asyncio
+async def test_get_valid_ranking():
+    hiscore_instance = Hiscore()
+    async with ClientSession() as session:
+        player_stats = await hiscore_instance.get_rank(
+            mode=HSMode.OLDSCHOOL,
+            session=session,
+            table=24,  # sailing
+            category=0,
+            size=50,  # Number of results to return
+            top_rank=0,  # Get top 50 player
+        )
+
+        # Assertions to confirm the response is correct
+        assert isinstance(player_stats, list)
